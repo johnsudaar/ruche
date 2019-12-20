@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/Scalingo/go-utils/logger"
 	"github.com/johnsudaar/ruche/config"
 	"github.com/johnsudaar/ruche/influx"
 	"github.com/pkg/errors"
@@ -33,6 +34,7 @@ type Value struct {
 }
 
 func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]string) error {
+	log := logger.Get(req.Context())
 	config := config.Get()
 
 	var body Input
@@ -41,15 +43,19 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 		return errors.Wrap(err, "fail to decode body")
 	}
 
+	log.Info(body)
+
 	valueStr, err := hex.DecodeString(body.Value.Payload)
 	if err != nil {
 		return errors.Wrap(err, "fail to decode payload (hex)")
 	}
+	log.Info(valueStr)
 
 	value, err := strconv.ParseFloat(string(valueStr), 32)
 	if err != nil {
 		return errors.Wrap(err, "fail to decode payload (hex)")
 	}
+	log.Info(value)
 
 	values := make(map[string]interface{})
 	tags := make(map[string]string)
@@ -62,21 +68,26 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 	tags["stream_id"] = body.StreamID
 	tags["model"] = body.Model
 	tags["location_provider"] = body.Location.Provider
+	log.Info(values)
+	log.Info(tags)
 
 	bp, err := influx.Start(config.InfluxUrl)
 	if err != nil {
 		return errors.Wrap(err, "fail to open influx connection")
 	}
+	log.Info("Add")
 
 	err = influx.Add("raw", values, tags, bp, body.Created)
 	if err != nil {
 		return errors.Wrap(err, "fail to add batch point")
 	}
+	log.Info("Write")
 
 	err = influx.Write(config.InfluxUrl, bp)
 	if err != nil {
 		return errors.Wrap(err, "fail to write points")
 	}
+	log.Info("Done")
 
 	return nil
 }
