@@ -24,6 +24,10 @@
 #   go-tests = true
 #   unused-packages = true
 
+[metadata.scalingo]
+  root-package = "github.com/johnsudaar/ruche"
+  go-version = "go1.13.0"
+  install = [ "./..." ]
 
 [[constraint]]
   name = "github.com/Scalingo/go-handlers"
