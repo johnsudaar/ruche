@@ -22,11 +22,11 @@ type Input struct {
 }
 
 type Location struct {
-	Provider string `json:"provider"`
-	Alt      int    `json:"alt"`
-	Accuracy int    `json:"accuracy"`
-	Lon      int    `json:"lon"`
-	Lat      int    `json:"lat"`
+	Provider string  `json:"provider"`
+	Alt      float64 `json:"alt"`
+	Accuracy float64 `json:"accuracy"`
+	Lon      float64 `json:"lon"`
+	Lat      float64 `json:"lat"`
 }
 
 type Value struct {
