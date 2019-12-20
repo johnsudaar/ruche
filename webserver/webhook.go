@@ -37,7 +37,6 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 	log := logger.Get(req.Context())
 	config := config.Get()
 
-	log.Info("READING body")
 	var body Input
 	err := json.NewDecoder(req.Body).Decode(&body)
 	if err != nil {
@@ -45,29 +44,32 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 		return errors.Wrap(err, "fail to decode body")
 	}
 
-	log.Info(body)
-
 	valueStr, err := hex.DecodeString(body.Value.Payload)
 	if err != nil {
 		log.WithError(err).Error("fail to decode payload (hex)")
 		return errors.Wrap(err, "fail to decode payload (hex)")
 	}
-	log.Info(valueStr)
-
-	value, err := strconv.ParseFloat(string(valueStr), 32)
-	if err != nil {
-		log.WithError(err).Error("fail to decode payload (str)")
-		return errors.Wrap(err, "fail to decode payload (str)")
-	}
-	log.Info(value)
 
 	values := make(map[string]interface{})
 	tags := make(map[string]string)
-	values["payload"] = value
 	values["location_alt"] = body.Location.Alt
 	values["location_accuracy"] = body.Location.Accuracy
 	values["location_lon"] = body.Location.Lon
 	values["location_lat"] = body.Location.Alt
+
+	if len(valueStr) > 4 {
+		log.Info("Model 1 decoding")
+		// Model 1: Use only 1 value
+		value, err := strconv.ParseFloat(string(valueStr), 32)
+		if err != nil {
+			log.WithError(err).Error("fail to decode payload (str)")
+			return errors.Wrap(err, "fail to decode payload (str)")
+		}
+		values["temp"] = value
+	} else {
+		log.Info("Model 2 decoding")
+
+	}
 
 	tags["stream_id"] = body.StreamID
 	tags["model"] = body.Model
