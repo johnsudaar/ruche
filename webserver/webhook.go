@@ -81,11 +81,11 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 		// 7-11: Hum xx.xx
 		// 12-16: Lum xxxxx
 		// 17-21: Bat tension
-		// 22-26: Masse ruche1
-		// 27-31: Masse ruche1
-		// 32-36: Masse ruche1
-		// 37-41: Masse ruche1
-		ruchID, err := strconv.Atoi(valueStr[0:2])
+		// 22-26: Masse hivee1
+		// 27-31: Masse hivee1
+		// 32-36: Masse hivee1
+		// 37-41: Masse hivee1
+		hiveID, err := strconv.Atoi(valueStr[0:2])
 		if err != nil {
 			return checkErr(ctx, err)
 		}
@@ -105,32 +105,32 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 		if err != nil {
 			return checkErr(ctx, err)
 		}
-		ruch1, err := strconv.ParseFloat(valueStr[22:27], 64)
+		hive1, err := strconv.ParseFloat(valueStr[22:27], 64)
 		if err != nil {
 			return checkErr(ctx, err)
 		}
-		ruch2, err := strconv.ParseFloat(valueStr[27:32], 64)
+		hive2, err := strconv.ParseFloat(valueStr[27:32], 64)
 		if err != nil {
 			return checkErr(ctx, err)
 		}
-		ruch3, err := strconv.ParseFloat(valueStr[32:37], 64)
+		hive3, err := strconv.ParseFloat(valueStr[32:37], 64)
 		if err != nil {
 			return checkErr(ctx, err)
 		}
-		ruch4, err := strconv.ParseFloat(valueStr[37:41], 64)
+		hive4, err := strconv.ParseFloat(valueStr[37:41], 64)
 		if err != nil {
 			return checkErr(ctx, err)
 		}
 
-		values["ruch_id"] = ruchID
+		values["hive_id"] = hiveID
 		values["temp"] = temp
 		values["hum"] = hum
 		values["lum"] = lum
 		values["bat"] = bat
-		values["ruch1"] = ruch1
-		values["ruch2"] = ruch2
-		values["ruch3"] = ruch3
-		values["ruch3"] = ruch4
+		values["hive_1"] = hive1
+		values["hive_2"] = hive2
+		values["hive_3"] = hive3
+		values["hive_4"] = hive4
 
 	}
 
