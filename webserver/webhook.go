@@ -65,7 +65,7 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 		log.Info("Restart: Ignoring...")
 		return nil
 	}
-	if len(valueStr) > 4 {
+	if len(valueStr) <= 5 {
 		log.Info("Model 1 decoding")
 		// Model 1: Use only 1 value
 		value, err := strconv.ParseFloat(valueStr, 32)
