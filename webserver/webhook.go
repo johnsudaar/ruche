@@ -37,9 +37,11 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 	log := logger.Get(req.Context())
 	config := config.Get()
 
+	log.Info("READING body")
 	var body Input
 	err := json.NewDecoder(req.Body).Decode(&body)
 	if err != nil {
+		log.WithError(err).Error("fail to decode body")
 		return errors.Wrap(err, "fail to decode body")
 	}
 
@@ -47,13 +49,15 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 
 	valueStr, err := hex.DecodeString(body.Value.Payload)
 	if err != nil {
+		log.WithError(err).Error("fail to decode payload (hex)")
 		return errors.Wrap(err, "fail to decode payload (hex)")
 	}
 	log.Info(valueStr)
 
 	value, err := strconv.ParseFloat(string(valueStr), 32)
 	if err != nil {
-		return errors.Wrap(err, "fail to decode payload (hex)")
+		log.WithError(err).Error("fail to decode payload (str)")
+		return errors.Wrap(err, "fail to decode payload (str)")
 	}
 	log.Info(value)
 
@@ -73,18 +77,21 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 
 	bp, err := influx.Start(config.InfluxUrl)
 	if err != nil {
+		log.WithError(err).Error("fail to open influx connection")
 		return errors.Wrap(err, "fail to open influx connection")
 	}
 	log.Info("Add")
 
 	err = influx.Add("raw", values, tags, bp, body.Created)
 	if err != nil {
+		log.WithError(err).Error("fail to add batch point")
 		return errors.Wrap(err, "fail to add batch point")
 	}
 	log.Info("Write")
 
 	err = influx.Write(config.InfluxUrl, bp)
 	if err != nil {
+		log.WithError(err).Error("fail to write points")
 		return errors.Wrap(err, "fail to write points")
 	}
 	log.Info("Done")
