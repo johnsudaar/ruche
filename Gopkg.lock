@@ -53,6 +53,18 @@
   version = "v1.7.3"
 
 [[projects]]
+  digest = "1:9b73396bc7a21f88702fe3d314ca7860843c08f9c787bb47f008075f840df23d"
+  name = "github.com/influxdata/influxdb"
+  packages = [
+    "client/v2",
+    "models",
+    "pkg/escape",
+  ]
+  pruneopts = "UT"
+  revision = "23bc63d43a8dc05f53afa46e3526ebb5578f3d88"
+  version = "v1.7.9"
+
+[[projects]]
   digest = "1:fd9bea48bbc5bba66d9891c72af7255fbebecdff845c37c679406174ece5ca1b"
   name = "github.com/kelseyhightower/envconfig"
   packages = ["."]
@@ -107,8 +119,10 @@
     "github.com/Scalingo/go-handlers",
     "github.com/Scalingo/go-utils/logger",
     "github.com/gorilla/handlers",
+    "github.com/influxdata/influxdb/client/v2",
     "github.com/kelseyhightower/envconfig",
     "github.com/pkg/errors",
+    "gopkg.in/errgo.v1",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -8,7 +8,8 @@ import (
 var config Config
 
 type Config struct {
-	Port int `envconfig:"PORT" default:"8081"`
+	Port      int    `envconfig:"PORT" default:"8081"`
+	InfluxUrl string `envconfig:"SCALINGO_INFLUX_URL"`
 }
 
 func Init() error {
