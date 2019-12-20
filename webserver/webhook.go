@@ -59,7 +59,7 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 	values["location_alt"] = body.Location.Alt
 	values["location_accuracy"] = body.Location.Accuracy
 	values["location_lon"] = body.Location.Lon
-	values["location_lat"] = body.Location.Alt
+	values["location_lat"] = body.Location.Lat
 
 	if valueStr == "Restart" {
 		log.Info("Restart: Ignoring...")
