@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/Scalingo/go-utils/logger"
@@ -88,35 +89,35 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 		// 37-41: Masse hivee1
 		hiveID := hex.EncodeToString([]byte(valueStr[0:2]))
 
-		temp, err := strconv.ParseFloat(valueStr[2:7], 64)
+		temp, err := strconv.ParseFloat(getValue(valueStr, 2, 7), 64)
 		if err != nil {
 			checkErr(ctx, err, "temp")
 		}
-		hum, err := strconv.ParseFloat(valueStr[7:12], 64)
+		hum, err := strconv.ParseFloat(getValue(valueStr, 7, 12), 64)
 		if err != nil {
 			checkErr(ctx, err, "hum")
 		}
-		lum, err := strconv.ParseFloat(valueStr[12:17], 64)
+		lum, err := strconv.ParseFloat(getValue(valueStr, 12, 17), 64)
 		if err != nil {
 			checkErr(ctx, err, "lum")
 		}
-		bat, err := strconv.ParseFloat(valueStr[17:22], 64)
+		bat, err := strconv.ParseFloat(getValue(valueStr, 17, 22), 64)
 		if err != nil {
 			checkErr(ctx, err, "bat")
 		}
-		hive1, err := strconv.ParseFloat(valueStr[22:27], 64)
+		hive1, err := strconv.ParseFloat(getValue(valueStr, 22, 27), 64)
 		if err != nil {
 			checkErr(ctx, err, "hive1")
 		}
-		hive2, err := strconv.ParseFloat(valueStr[27:32], 64)
+		hive2, err := strconv.ParseFloat(getValue(valueStr, 27, 32), 64)
 		if err != nil {
 			checkErr(ctx, err, "hive2")
 		}
-		hive3, err := strconv.ParseFloat(valueStr[32:37], 64)
+		hive3, err := strconv.ParseFloat(getValue(valueStr, 32, 37), 64)
 		if err != nil {
 			checkErr(ctx, err, "hive3")
 		}
-		hive4, err := strconv.ParseFloat(valueStr[37:41], 64)
+		hive4, err := strconv.ParseFloat(getValue(valueStr, 37, 41), 64)
 		if err != nil {
 			checkErr(ctx, err, "hive4")
 		}
@@ -167,4 +168,8 @@ func checkErr(ctx context.Context, err error, value string) error {
 	log := logger.Get(ctx)
 	log.WithError(err).WithField("field", value).Error(err.Error())
 	return err
+}
+
+func getValue(payload string, start, end int) string {
+	return strings.Trim(payload[start:end], "\x00")
 }
