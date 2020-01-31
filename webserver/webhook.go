@@ -47,6 +47,7 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 		return errors.Wrap(err, "fail to decode body")
 	}
 
+	log.Infof("Decoding %v", body.Value.Payload)
 	valueBuf, err := hex.DecodeString(body.Value.Payload)
 	if err != nil {
 		log.WithError(err).Error("fail to decode payload (hex)")
@@ -54,7 +55,6 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 	}
 
 	valueStr := string(valueBuf)
-	log.Infof("Decoding %v", valueStr)
 
 	values := make(map[string]interface{})
 	tags := make(map[string]string)
