@@ -85,10 +85,8 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 		// 27-31: Masse hivee1
 		// 32-36: Masse hivee1
 		// 37-41: Masse hivee1
-		hiveID, err := strconv.Atoi(valueStr[0:2])
-		if err != nil {
-			return checkErr(ctx, err)
-		}
+		hiveID := hex.EncodeToString([]byte(valueStr[0:2]))
+
 		temp, err := strconv.ParseFloat(valueStr[2:7], 64)
 		if err != nil {
 			return checkErr(ctx, err)
@@ -122,7 +120,7 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 			return checkErr(ctx, err)
 		}
 
-		values["hive_id"] = hiveID
+		tags["hive_id"] = hiveID
 		values["temp"] = temp
 		values["hum"] = hum
 		values["lum"] = lum
