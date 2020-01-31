@@ -171,5 +171,5 @@ func checkErr(ctx context.Context, err error, value string) error {
 }
 
 func getValue(payload string, start, end int) string {
-	return strings.Trim(payload[start:end], "\x00")
+	return strings.Trim(payload[start:end], "\x00 ")
 }
