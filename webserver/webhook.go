@@ -90,35 +90,35 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 
 		temp, err := strconv.ParseFloat(valueStr[2:7], 64)
 		if err != nil {
-			return checkErr(ctx, err)
+			checkErr(ctx, err, "temp")
 		}
 		hum, err := strconv.ParseFloat(valueStr[7:12], 64)
 		if err != nil {
-			return checkErr(ctx, err)
+			checkErr(ctx, err, "hum")
 		}
 		lum, err := strconv.ParseFloat(valueStr[12:17], 64)
 		if err != nil {
-			return checkErr(ctx, err)
+			checkErr(ctx, err, "lum")
 		}
 		bat, err := strconv.ParseFloat(valueStr[17:22], 64)
 		if err != nil {
-			return checkErr(ctx, err)
+			checkErr(ctx, err, "bat")
 		}
 		hive1, err := strconv.ParseFloat(valueStr[22:27], 64)
 		if err != nil {
-			return checkErr(ctx, err)
+			checkErr(ctx, err, "hive1")
 		}
 		hive2, err := strconv.ParseFloat(valueStr[27:32], 64)
 		if err != nil {
-			return checkErr(ctx, err)
+			checkErr(ctx, err, "hive2")
 		}
 		hive3, err := strconv.ParseFloat(valueStr[32:37], 64)
 		if err != nil {
-			return checkErr(ctx, err)
+			checkErr(ctx, err, "hive3")
 		}
 		hive4, err := strconv.ParseFloat(valueStr[37:41], 64)
 		if err != nil {
-			return checkErr(ctx, err)
+			checkErr(ctx, err, "hive4")
 		}
 
 		tags["hive_id"] = hiveID
@@ -163,8 +163,8 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 	return nil
 }
 
-func checkErr(ctx context.Context, err error) error {
+func checkErr(ctx context.Context, err error, value string) error {
 	log := logger.Get(ctx)
-	log.WithError(err).Error(err.Error())
+	log.WithError(err).WithField("field", value).Error(err.Error())
 	return err
 }
