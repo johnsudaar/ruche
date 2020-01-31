@@ -53,6 +53,7 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 	}
 
 	valueStr := string(valueBuf)
+	log.Infof("Decoding %v", valueStr)
 
 	values := make(map[string]interface{})
 	tags := make(map[string]string)
