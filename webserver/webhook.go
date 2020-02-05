@@ -87,6 +87,7 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 		// 27-31: Masse hivee1
 		// 32-36: Masse hivee1
 		// 37-41: Masse hivee1
+		// 42-46: Sol tension
 		hiveID := hex.EncodeToString([]byte(valueStr[0:2]))
 
 		temp, err := strconv.ParseFloat(getValue(valueStr, 2, 7), 64)
@@ -121,6 +122,11 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 		if err != nil {
 			checkErr(ctx, err, "hive4")
 		}
+		sol, err := strconv.ParseFloat(getValue(valueStr, 42, 47), 64)
+		if err != nil {
+			checkErr(ctx, err, "sol")
+		}
+
 
 		tags["hive_id"] = hiveID
 		values["temp"] = temp
@@ -131,7 +137,7 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 		values["hive_2"] = hive2
 		values["hive_3"] = hive3
 		values["hive_4"] = hive4
-
+		values["sol"] = sol
 	}
 
 	tags["stream_id"] = body.StreamID
