@@ -4,15 +4,18 @@ import (
 	"context"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/Scalingo/go-utils/logger"
 	"github.com/johnsudaar/ruche/config"
 	"github.com/johnsudaar/ruche/influx"
 	"github.com/pkg/errors"
+
+	"github.com/Scalingo/go-utils/logger"
 )
 
 type Input struct {
@@ -40,8 +43,16 @@ func Webhook(resp http.ResponseWriter, req *http.Request, params map[string]stri
 	log := logger.Get(ctx)
 	config := config.Get()
 
+	res, err := io.ReadAll(req.Body)
+	if err != nil {
+		return errors.Wrap(err, "fail to read body")
+	}
+	fmt.Printf("Body: %s\n", string(res))
+	fmt.Printf("Body (Hex): %x\n", hex.EncodeToString(res))
+	return nil
+
 	var body Input
-	err := json.NewDecoder(req.Body).Decode(&body)
+	err = json.NewDecoder(req.Body).Decode(&body)
 	if err != nil {
 		log.WithError(err).Error("fail to decode body")
 		return errors.Wrap(err, "fail to decode body")
